@@ -13,6 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Clear loading message
       activitiesList.innerHTML = "";
 
+      // Remove previously-added options (keep the placeholder)
+      activitySelect.querySelectorAll('option:not([value=""])').forEach(o => o.remove());
+
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
@@ -26,6 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
         `;
+
+        // Build participants section
+        const participantsDiv = document.createElement('div');
+        participantsDiv.className = 'participants';
+
+        if (details.participants && details.participants.length > 0) {
+          const title = document.createElement('p');
+          title.className = 'participants-title';
+          title.innerHTML = '<strong>Participants:</strong>';
+          participantsDiv.appendChild(title);
+
+          const ul = document.createElement('ul');
+          details.participants.forEach((p) => {
+            const li = document.createElement('li');
+            li.textContent = p;
+            ul.appendChild(li);
+          });
+          participantsDiv.appendChild(ul);
+        } else {
+          const none = document.createElement('p');
+          none.className = 'no-participants';
+          none.textContent = 'No participants yet';
+          participantsDiv.appendChild(none);
+        }
+
+        activityCard.appendChild(participantsDiv);
 
         activitiesList.appendChild(activityCard);
 
